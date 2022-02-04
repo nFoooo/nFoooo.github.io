@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Cultivation Game Test</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
+  <link href="./background-images.css" rel="stylesheet">
+  <link href="treant-js-master/Treant.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+
+  .main-column {
+    margin:5px;
+  }
+
+  .sub-div {
+    box-shadow: 0 4px #eee, 0 -4px #eee, 4px 0 #eee, -4px 0 #eee, 0 0 0 4px #999, 0 12px 0 4px #999, 0 12px #999, -8px 0 #999, 8px 0 #999, -8px 12px #999, 8px 12px #999, 0 -8px #999;
+    margin: 15px;
+    margin-bottom: 30px;
+    /* background-color: #eee; */
+  }
+
+  .cultivate-button {
+    border-radius: 4px;
+  }
+
+  .node-button {
+    border-radius: 4px;
+    width:40%;
+  }
+
+  .member-button {
+    border-radius: 4px;
+    font-size:.75rem;
+  }
+
+  .level-up-amount {
+    font-size:12px;
+  }
+  .cost {
+    font-weight: bold;
+    font-size:12px;
+  }
+  .location {
+    font-size:12px;
+    background-color: #efefef;
+    padding: 1px;
+  }
+  .mission-description {
+    font-size:12px;
+    background-color: #efefef;
+    padding: 1px;
+  }
+  .level  {
+    font-weight: bold;
+    font-size:12px;
+    background-color: #efefef;
+    padding: 1px;
+  }
+
+  .qps {
+    font-size:12px;
+    background-color: #efefef;
+    padding: 1px;
+  }
+
+  .added-qi  {
+    font-weight: bold;
+    font-size:14px;
+    color:black;
+  }
+
+  .progress-bar {
+    transition: none;
+  }
+
+  .btn-sm {
+    font-size: .75rem;
+  }
+
+  .nav-item {
+    font-size: .75rem;
+  }
+
+  .member-bg {
+    border: solid 1px black;  
+    margin-bottom: 2px;
+    border-radius: 4px;
+  }
+
+  .mission-bg {
+    border: solid 1px black;  
+    margin-bottom: 2px;
+    border-radius: 4px;
+  }
+
+  .member-bg span {
+    font-size: .75rem;
+  }
+
+  .talent-tree-node {
+    font-size: .75rem;
+    text-align: center;
+    border: solid 1px black;  
+    margin-bottom: 2px;
+    border-radius: 4px;
+  }
+
+  .node-name {
+    font-weight: bold;
+  }
+
+  .sub-div .title {
+    position: relative;
+    top: -0.5em;
+    margin-left: 1em;
+    display: inline;
+    background-color: #222;
+    color:white;
+    box-shadow: 0 4px #222, 
+      0 -4px #222, 
+      4px 0 #222, 
+      -4px 0 #222, 
+      0 0 0 6px #999,
+       0 6px 0 4px #999, 
+       0 6px #999, 
+       -4px 0 #999, 
+       4px 0 #999, 
+       -4px 6px #999, 
+       4px 6px #999, 
+       0 -4px #999;
+    margin: 15px;
+    margin-bottom: 30px;
+    font-weight: bold;
+  }
+
+  #stats-container .row{
+    min-height: 30px;
+  }
+</style>
+
+<body>
+  <div class="main-bg">
+    <div class="row">
+      <div id="left-column" class="main-column col-md-2" style="flex-direction: column;">
+        <div id="avatar-container" class="sub-div" style="flex-direction: column; background-image: url('./Assets/parallax-bg.png');" >
+          <div class="title">Avatar</div>
+          <img id="avatar" style="height:100%;width:100%;" src="./Assets/sai.png" />
+        </div>
+        <div id="global-stats" class="sub-div" style="flex-direction: column;">
+          <div class="title">Global Multipliers</div>
+          <div class="row">
+            <div class="col-md-6">Stage multiplier:</div> 
+            <div class="col-md-6"><span id="stage-multiplier" style="float:right;"></span></div>
+          </div>
+          <div class="row" id="talent-multiplier-div" style="display:none;">
+            <div class="col-md-6">Talent multiplier:</div> 
+            <div class="col-md-6"><span id="talent-multiplier" style="float:right;"></span></div>
+          </div>          
+          <div class="row" id="sect-multiplier-div" style="display:none;">
+            <div class="col-md-6">Sect multiplier:</div> 
+            <div class="col-md-6"><span id="sect-multiplier" style="float:right;"></span></div>
+          </div>           
+          <div class="row">
+            <div class="col-md-6">Roots multiplier:</div> 
+            <div class="col-md-6"><span id="roots-multiplier" style="float:right;"></span></div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">Total multiplier:</div> 
+            <div class="col-md-6"><span id="global-multiplier" style="float:right;"></span></div>
+          </div>
+          <div class="row">
+            <div class="col-md-6">Qi per second: </div>
+            <div class="col-md-6">
+              <div id="total-production-div-0">
+                <span id="total-production-0" style="float:right;"></span><img src="Assets/qi-0.png" style="float:right;"/><br>
+              </div>                           
+              <div id="total-production-div-1">
+                <span id="total-production-1" style="float:right;"></span><img src="Assets/qi-1.png" style="float:right;"/><br>
+              </div>                           
+              <div id="total-production-div-2">
+                <span id="total-production-2" style="float:right;"></span><img src="Assets/qi-2.png" style="float:right;"/><br>
+              </div>                           
+              <div id="total-production-div-3">
+                <span id="total-production-3" style="float:right;"></span><img src="Assets/qi-3.png" style="float:right;"/><br>
+              </div>                           
+              <div id="total-production-div-4">
+                <span id="total-production-4" style="float:right;"></span><img src="Assets/qi-4.png" style="float:right;"/><br>
+              </div>                           
+            </div>  
+          </div>                    
+        </div>
+      </div>
+      <div id="mid-column" class="main-column col-md-6">
+        <div id="stats-container" class="sub-div">
+          <div class="title">Character Stats</div>
+          <div class="row">
+            <div class="col-md-4">Spiritual roots:</div>
+            <div class="col-md-4">
+              <span id="roots"></span>
+            </div>
+            <div class="col-md-4">
+              <button id="reforge-button" class="cultivate-button" onclick="reforge()" disabled>
+                Reforge Body (+<span id="reforge-reward">0</span> 
+                <img src="Assets/talent-stone.png"/>)
+              </button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">Total qi accumulated:</div>
+            <div class="col-md-4">
+              <div id= "current-prestige-qi-div-0">              
+                <img src="Assets/qi-0.png"/>
+                <span id="current-prestige-qi-0"></span> <br>
+              </div>
+              <div id= "current-prestige-qi-div-1">
+                <img src="Assets/qi-1.png"/>
+                <span id="current-prestige-qi-1"></span> <br>
+              </div>
+              <div id= "current-prestige-qi-div-2">
+                <img src="Assets/qi-2.png"/>
+                <span id="current-prestige-qi-2"></span> <br>
+              </div>
+              <div id= "current-prestige-qi-div-3">
+                <img src="Assets/qi-3.png"/>
+                <span id="current-prestige-qi-3"></span> <br>
+              </div>
+              <div id= "current-prestige-qi-div-4">
+                <img src="Assets/qi-4.png"/>
+                <span id="current-prestige-qi-4"></span> <br>
+              </div>
+            </div>
+            <div class="col-md-4">
+            </div>
+          </div>
+          
+          <div class="row">
+            <div class="col-md-4">Unused qi:</div>
+            <div class="col-md-4">
+              <div id="current-qi-div-0">              
+                <img src="Assets/qi-0.png"/>
+                <span id="current-qi-0"></span> <br>
+              </div>
+              <div id="current-qi-div-1">              
+                <img src="Assets/qi-1.png"/>
+                <span id="current-qi-1"></span> <br>
+              </div>
+              <div id="current-qi-div-2">              
+                <img src="Assets/qi-2.png"/>
+                <span id="current-qi-2"></span> <br>
+              </div>
+              <div id="current-qi-div-3">              
+                <img src="Assets/qi-3.png"/>
+                <span id="current-qi-3"></span> <br>
+              </div>
+              <div id="current-qi-div-4">              
+                <img src="Assets/qi-4.png"/>
+                <span id="current-qi-4"></span> <br>
+              </div>
+            </div>
+            <div class="col-md-4">
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4">Stage:</div>
+            <div class="col-md-4">
+              <span id="stage"></span>
+            </div>
+            <div class="col-md-4">
+              <button id="breakthrough-button" class="cultivate-button" onclick="breakthrough(0)" disabled> 
+                Breakthrough 
+                <span id="breakthrough-0"><img src="Assets/qi-0.png"/> <span id="breakthrough-cost-0"></span></span>
+                <span id="breakthrough-1"><img src="Assets/qi-0.png"/> <span id="breakthrough-cost-1"></span></span>
+                <span id="breakthrough-2"><img src="Assets/qi-0.png"/> <span id="breakthrough-cost-2"></span></span>
+                <span id="breakthrough-3"><img src="Assets/qi-0.png"/> <span id="breakthrough-cost-3"></span></span>
+                <span id="breakthrough-4"><img src="Assets/qi-0.png"/> <span id="breakthrough-cost-4"></span></span>
+              </button>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-4">Dps:</div>
+            <div class="col-md-4">
+                <span id ="dps">Combat coming soon...</span>
+            </div>
+            <div class="col-md-4">
+            </div>
+          </div>
+        </div>
+
+        <div class="sub-div container ">
+          <div class="title">Training</div>
+          <div class="row" style="margin-bottom: 2px; margin-top:2px;">
+            <div class="col-md-8">
+              <input type="radio" class="btn-check" name="buy-amount" id="option1" autocomplete="off" data-amount="1" checked>
+              <label class="btn btn-primary btn-sm" for="option1">x1</label>
+
+              <input type="radio" class="btn-check" name="buy-amount" id="option2" autocomplete="off" data-amount="10">
+              <label class="btn btn-primary btn-sm" for="option2">x10</label>
+
+              <input type="radio" class="btn-check" name="buy-amount" id="option3" autocomplete="off" data-amount="100">
+              <label class="btn btn-primary btn-sm" for="option3">x100</label>
+
+              <input type="radio" class="btn-check" name="buy-amount" id="option4" autocomplete="off" data-amount="-1">
+              <label class="btn btn-primary btn-sm" for="option4">Max</label>
+            </div>
+            <div id="ascension-div" class="col-md-4" style="display: none;">
+              <button id="ascend-button" class="cultivate-button"  onclick="ascend()" disabled> Ascend</button>
+            </div>
+          </div>
+          <div class="row">
+            <ul class="nav nav-tabs" id="generator-tabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="earth-tab" data-bs-toggle="tab" data-bs-target="#earth" type="button" role="tab" aria-controls="earth" aria-selected="true">Earth</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="netherworld-tab" data-bs-toggle="tab" data-bs-target="#netherworld" type="button" role="tab" aria-controls="netherworld" aria-selected="false"></button>
+              </li>
+            </ul>
+            <div id="generator-container" class="tab-content">
+              <div class="tab-pane fade show active" id="earth" role="tabpanel" aria-labelledby="earth-tab">
+                <div id="earth-container" class="">
+                </div>
+              </div>
+              <div class="tab-pane fade" id="netherworld" role="tabpanel" aria-labelledby="netherworld-tab">
+                <div id="netherworld-container" class="">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="right-column" class="main-column col-md-3" style="flex-direction: column;">
+        <div id="sect-hider" class="sub-div container">
+          <button id="join-sect-button" class="cultivate-button" onclick="joinSect()" disabled>Join</button> sect once you've reached the stage of Qi formation.
+        </div>
+        <div id="sect-container" class="sub-div container" style="display: none;">
+          <div class="title">Sect</div>
+          <div class="row">
+            <div>
+              Points: <span id="sect-points"></span> <img src="./Assets/sect-point.png"/>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              Strength: <span id="sect-strength"></span> <img src="./Assets/sword.png"/>
+            </div>
+          </div>
+          <div class="row">
+            <ul class="nav nav-tabs" id="mySectTab" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="missions-tab" data-bs-toggle="tab" data-bs-target="#missions" type="button" role="tab" aria-controls="missions" aria-selected="true">Missions</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="members-tab" data-bs-toggle="tab" data-bs-target="#members" type="button" role="tab" aria-controls="members" aria-selected="false">Members</button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="research-tab" data-bs-toggle="tab" data-bs-target="#research" type="button" role="tab" aria-controls="research" aria-selected="false">Research</button>
+              </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="missions" role="tabpanel" aria-labelledby="missions-tab">
+                <div id="mission-container" class="">
+                </div>
+              </div>
+              <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
+                <div id="member-container" class="">
+                </div>
+              </div>
+              <div class="tab-pane fade" id="research" role="tabpanel" aria-labelledby="research-tab">...</div>
+            </div>
+          </div>
+        </div>
+        <div id="talent-tree-hider" class="sub-div container">
+          Unlock the talent tree once you have reforged your body.
+        </div>
+        <div id="talent-tree-container" class="sub-div container" style="display:none;">
+          <div class="title">Talent Tree</div>
+          <div class="row">
+            <div>
+              Talent stones: <span id="talent-stones"></span> <img src="./Assets/talent-stone.png"/>
+            </div>
+          </div>
+          <div class="row">            
+            <div id="talent-tree"> </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="generator-template" class="row align-items-center location-bg" style="height: 50px; display: none;">
+    <div name="generator-buy-button-container" class="col-md-4">
+      <button class="cultivate-button" style="width:80%">
+        <span class="level-up-amount"></span>
+        <span><img name="qi-image"></span>
+        <span class="cost"></span>
+      </button>
+    </div>
+    <div name="generator-progress-bar" class="col-md-4" style="height: 55%;">
+        <div class="progress" style="height: 100%;">
+          <div class="progress-bar" role="progressbar" style="width: 0%;" aria-value-now="0" aria-value-min="0" aria-value-max="100"></div>
+        </div>
+    </div>
+    <div name="generator-info-container" class="col-md-4">
+      <div class="row">
+        <div class="col-md-5 my-auto">
+          <span class="added-qi"></span>
+        </div>
+        <div class="col-md-7">      
+          <span class="location"></span><br/>
+          <span class="level"></span>
+          <span class="qps"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div id="mission-template" class="row mission-bg" style="display:none;">
+    <div name="mission-description" class="mission-description">
+      <span name="mission-action"></span> in <span name="mission-location"></span> for <span name="mission-reward"></span> <img src="./Assets/sect-point.png">
+    </div>
+    <div name="mission-button-container" class="">
+      <button name="mission-button" class="member-button">Start</button> 
+      <span class="mission-description">
+        <span name="mission-duration" >
+        </span> seconds
+      </span></div>
+  </div>
+
+  <div id="member-template" class="row member-bg" style="display:none;">
+    <div class="col-md-2">
+      <img name="member-avatar"/>
+    </div>
+    <div name="member-description" class="col-md-5">
+      <span name="member-name"></span> <span name="member-strength"></span> <img src="./Assets/sword.png"><br>
+      <span name="member-stage"></span>
+    </div>
+    <div class="col-md-4" name="member-mission-div">
+      <span name="member-mission"></span>
+    </div>
+    <div class="col-md-4" style="display:none;" name="member-training-div">
+      <button name="member-training-button" class="member-button">
+        Start <span name="member-training-cost"></span> <img src="./Assets/sect-point.png">
+      </button> 
+      <span name="member-training-time"></span>
+    </div>
+  </div>
+
+  <div id="talent-tree-nodes" style="display:none">
+    <div id="spiritual-roots-talent-node" class="talent-tree-node col-md-4" style="background-color: lightgreen;" data-talent-type="roots">
+      <span name="node-name" class="node-name">Spiritual roots</span><br> <span name="rank">1</span>/<span name="max-rank">12</span><br>
+      <button name="node-button" class="node-button"><img src="./Assets/talent-stone-smaller.png"><span name="node-cost">50</span></button>
+    </div>
+    <div id="basic-speed-talent-node" class="talent-tree-node col-md-4" style="background-color: coral;" data-talent-type="basic-speed">
+      <span name="node-name" class="node-name">Basic Speed</span><br> <span name="rank">1</span>/<span name="max-rank">12</span><br>
+      <button name="node-button" class="node-button"><img src="./Assets/talent-stone-smaller.png"><span name="node-cost">50</span></button>
+    </div>
+    <div id="basic-efficiency-talent-node" class="talent-tree-node col-md-4" style="background-color: lightblue;" data-talent-type="basic-efficiency">
+      <span name="node-name" class="node-name">Basic Efficiency</span><br> <span name="rank">1</span>/<span name="max-rank">12</span><br>
+      <button name="node-button" class="node-button"><img src="./Assets/talent-stone-smaller.png"><span name="node-cost">50</span></button>
+    </div>
+    <div id="intermediate-speed-talent-node" class="talent-tree-node col-md-4" style="background-color: coral;" data-talent-type="intermediate-speed">
+      <span name="node-name" class="node-name">Intermediate Speed</span><br> <span name="rank">1</span>/<span name="max-rank">12</span><br>
+      <button name="node-button" class="node-button"><img src="./Assets/talent-stone-smaller.png"><span name="node-cost">50</span></button>
+    </div>
+    <div id="intermediate-efficiency-talent-node" class="talent-tree-node col-md-4" style="background-color: lightblue;" data-talent-type="intermediate-efficiency">
+      <span name="node-name" class="node-name">Intermediate Efficiency</span><br> <span name="rank">1</span>/<span name="max-rank">12</span><br>
+      <button name="node-button" class="node-button"><img src="./Assets/talent-stone-smaller.png"><span name="node-cost">50</span></button>
+    </div>
+    <div id="advanced-speed-talent-node" class="talent-tree-node col-md-4" style="background-color: coral;" data-talent-type="advanced-speed">
+      <span name="node-name" class="node-name">Advanced Speed</span><br> <span name="rank">1</span>/<span name="max-rank">12</span><br>
+      <button name="node-button" class="node-button"><img src="./Assets/talent-stone-smaller.png"><span name="node-cost">50</span></button>
+    </div>
+    <div id="advanced-efficiency-talent-node" class="talent-tree-node col-md-4" style="background-color: lightblue;" data-talent-type="advanced-efficiency">
+      <span name="node-name" class="node-name">Advanced Efficiency</span><br> <span name="rank">1</span>/<span name="max-rank">12</span><br>
+      <button name="node-button" class="node-button"><img src="./Assets/talent-stone-smaller.png"><span name="node-cost">50</span></button>
+    </div>
+  </div>
+
+  <script
+          src="https://code.jquery.com/jquery-3.6.0.min.js"
+          integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+          crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" 
+          integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" 
+          crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+  <script src="treant-js-master/vendor/raphael.js"></script>
+  <script src="treant-js-master/Treant.js"></script>
+  <script src="./cultivationInfo.js"></script>
+  <script src="./qi.js"></script>
+  <script src="./qiHtmlManipulations.js"></script>
+  <script src="./bigdisplay.js"></script>
+  <script src="./util.js"></script>
+  <script src="talentTreeConfig.js"></script>
+</body>
+
+</html> 

@@ -1,0 +1,155 @@
+.location-bg {
+  border: solid 1px black;  
+  margin-bottom: 2px;
+  border-radius: 4px;
+}
+
+.training-bg {
+  position: relative;
+}
+.training-bg::after {
+  content: "";
+  background: url('./Assets/grass.png');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1; 
+}
+
+.sparring-bg {
+  position: relative;
+}
+.sparring-bg::after {
+  content: "";
+  background: url('./Assets/sparring-ground.png');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.mountain-bg {
+  position: relative;
+}
+.mountain-bg::after {
+  content: "";
+  background: url('./Assets/glacial-mountains-bg.png ');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.library-bg {
+  position: relative;
+}
+.library-bg::after {
+  content: "";
+  background: url('./Assets/library-bg.png');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.hunting-bg {
+  position: relative;
+}
+.hunting-bg::after {
+  content: "";
+  background: url('./Assets/forest-bg.png');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.tournament-bg {
+  position: relative;
+}
+.tournament-bg::after {
+  content: "";
+  background: url('./Assets/tournament-bg.png');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.pocket-bg {
+  position: relative;
+}
+.pocket-bg::after {
+  content: "";
+  background: url('./Assets/space-bg.png');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.burial-bg {
+  position: relative;
+}
+.burial-bg::after {
+  content: "";
+  background: url('./Assets/burial-bg.png');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.dreamworld-bg {
+  position: relative;
+}
+.dreamworld-bg::after {
+  content: "";
+  background: url('./Assets/dreamworld-bg.png');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
+
+.primordial-bg {
+  position: relative;
+}
+.primordial-bg::after {
+  content: "";
+  background: url('./Assets/cave-bg.png');
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;   
+}
